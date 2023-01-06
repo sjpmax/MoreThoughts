@@ -11,6 +11,19 @@ using Timberborn.SelectionSystem;
 using Timberborn.SingletonSystem;
 using Timberborn.ToolSystem;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using HarmonyLib;
+using TimberApi.ConsoleSystem;
+using TimberApi.ModSystem;
+using Timberborn.Characters;
+using Timberborn.GameDistricts;
+using Timberborn.PrefabSystem;
+using UnityEngine;
+using Timberborn.StockpilesUI;
+using Timberborn.FactionSystemGame;
+using TimberApi.DependencyContainerSystem;
 
 namespace MoreThoughts
 {
@@ -31,7 +44,18 @@ namespace MoreThoughts
     [HarmonyPatch]
     public class KeyPressedPatch
     {
+        public static MethodInfo TargetMethod()
+        {
+            return AccessTools.Method(AccessTools.TypeByName("StockpileOverlay"), "Load", new[]
+            {
+                 typeof(StockpileOverlay)
+             });
+        }
+
+        static void Postfix(StockpileOverlay stockpileOverlay)
+        {
+            DependencyContainer.GetInstance<IMoreThoughts>().hasButtonBeenPressed();
+        }
+    }
 
     }
-    
-}
