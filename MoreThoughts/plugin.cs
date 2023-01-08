@@ -4,6 +4,8 @@ using TimberApi.ModSystem;
 using System.Reflection;
 using Timberborn.StockpilesUI;
 using TimberApi.DependencyContainerSystem;
+using Timberborn.Stockpiles;
+using Timberborn.InventorySystem;
 
 namespace MoreThoughts
 {
@@ -21,21 +23,21 @@ namespace MoreThoughts
         }
     }
 
-    [HarmonyPatch]
-    public class KeyPressedPatch
-    {
-        public static MethodInfo TargetMethod()
-        {
-            return AccessTools.Method(AccessTools.TypeByName("StockpileOverlay"), "Load", new[]
-            {
-                 typeof(StockpileOverlay)
-             });
-        }
+    //[HarmonyPatch]
+    //public class KeyPressedPatch
+    //{
+    //public static MethodInfo TargetMethod()
+    //{
+    //    return AccessTools.Method(AccessTools.TypeByName("StockpileInventoryInitializer"), "Initialize", new[]
+    //     {
+    //         typeof(Stockpile), typeof(Inventory)
+    //     });
+    //}
 
-        static void Postfix(StockpileOverlay stockpileOverlay)
-        {
-            DependencyContainer.GetInstance<IMoreThoughts>().hasButtonBeenPressed();
-        }
-    }
+    //    static void Postfix(StockpileOverlay stockpileOverlay)
+    //    {
+    //        DependencyContainer.GetInstance<IMoreThoughts>().hasButtonBeenPressed();
+    //    }
+    //}
 
-    }
+}
