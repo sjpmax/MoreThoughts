@@ -31,6 +31,7 @@ namespace MoreThoughts
         private BeaverBuildingView _home;
 
         private BeaverBuildingView _workplace;
+        private Label _beaverThoughtLabel;
 
         public MoreThoughtsFragment(ILoc loc, VisualElementLoader visualElementLoader, UIBuilder builder, BeaverBuildingViewFactory beaverBuildingViewFactory)
         {           
@@ -46,18 +47,16 @@ namespace MoreThoughts
             _root = _visualElementLoader.LoadVisualElement("Master/EntityPanel/BeaverBuildingsFragment");
             var rootBuilder = _builder.CreateComponentBuilder()
                                 .CreateLabel()
-                                .AddPreset(builder => {
-                                    var label = builder.Labels().GameText("", "yo");
-                                    label.style.marginRight = new Length(5, LengthUnit.Pixel);
-                                    return label;
-                                })
                                 .AddPreset(factory => factory.Labels()
-                                                             .GameTextBig(name: "BeaverThoughtsLabel",
-                                                                          builder: builder =>
-                                                                             builder.SetStyle(style =>
-                                                                                 style.alignSelf = Align.Center)))
+                                .GameTextBig(name: "BeaverThoughtsLabel",
+                                            builder: builder =>
+                                                builder.SetStyle(style =>
+                                                    style.alignSelf = Align.Center)))
                                 .BuildAndInitialize();
             _root.Add(rootBuilder);
+            _home = _beaverBuildingViewFactory.Create(_root.Q<Button>("Home"));
+            _workplace = _beaverBuildingViewFactory.Create(_root.Q<Button>("Workplace"));
+            _beaverThoughtLabel = _root.Q<Label>("BeaverThoughtsLabel");
             return _root;
 
         }
@@ -70,8 +69,9 @@ namespace MoreThoughts
 
         public void ShowFragment(GameObject entity)
         {
-            //_home.Root.ToggleDisplayStyle(false);
-            //_workplace.Root.ToggleDisplayStyle(false);
+            _home.Root.ToggleDisplayStyle(false);
+            _workplace.Root.ToggleDisplayStyle(false);
+            string beaverThoughtText = "";
             using (StreamReader r = new StreamReader("E:\\Games\\steamapps\\common\\Timberborn\\BepInEx\\plugins\\MoreThoughts\\lang\\enUS_thoughts.json"))
             {
                 string json = r.ReadToEnd();
@@ -80,9 +80,9 @@ namespace MoreThoughts
                 int index = random.Next(beaverThoughts.Count);
                 Plugin.Log.LogInfo("show fragment: " + beaverThoughts[index].Thought.ToString());
 
-
+                beaverThoughtText = "\"" + beaverThoughts[index].Thought.ToString() +"\"";
             }
-
+            _beaverThoughtLabel.text = beaverThoughtText;
             _root.ToggleDisplayStyle(visible: true);
         }
 
