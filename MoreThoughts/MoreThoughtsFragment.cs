@@ -10,6 +10,11 @@ using Timberborn.CoreUI;
 using static UnityEngine.UIElements.Length.Unit;
 using Timberborn.Localization;
 using Timberborn.SelectionSystem;
+using Timberborn.BeaversUI;
+using Timberborn.WorkSystem;
+using Timberborn.DwellingSystem;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace MoreThoughts
 {
@@ -20,13 +25,19 @@ namespace MoreThoughts
         private VisualElement? _root;
         private readonly ILoc _loc;
 
+        private readonly BeaverBuildingViewFactory _beaverBuildingViewFactory;
         private readonly VisualElementLoader _visualElementLoader;
 
-        public MoreThoughtsFragment(ILoc loc, VisualElementLoader visualElementLoader, UIBuilder builder)
+        private BeaverBuildingView _home;
+
+        private BeaverBuildingView _workplace;
+
+        public MoreThoughtsFragment(ILoc loc, VisualElementLoader visualElementLoader, UIBuilder builder, BeaverBuildingViewFactory beaverBuildingViewFactory)
         {           
             _loc = loc;
             _visualElementLoader = visualElementLoader;
             _builder = builder;
+            _beaverBuildingViewFactory = beaverBuildingViewFactory;
         }
 
         public VisualElement InitializeFragment()
@@ -35,9 +46,13 @@ namespace MoreThoughts
             _root = _visualElementLoader.LoadVisualElement("Master/EntityPanel/BeaverBuildingsFragment");
             var rootBuilder = _builder.CreateComponentBuilder()
                                 .CreateLabel()
+                                .AddPreset(builder => {
+                                    var label = builder.Labels().GameText("", "yo");
+                                    label.style.marginRight = new Length(5, LengthUnit.Pixel);
+                                    return label;
+                                })
                                 .AddPreset(factory => factory.Labels()
                                                              .GameTextBig(name: "BeaverThoughtsLabel",
-                                                                          locKey: "SJPMax.Beaver.thoughtContainer",
                                                                           builder: builder =>
                                                                              builder.SetStyle(style =>
                                                                                  style.alignSelf = Align.Center)))
@@ -46,11 +61,28 @@ namespace MoreThoughts
             return _root;
 
         }
-        public void UpdateFragment() { _root.ToggleDisplayStyle(visible: true); }    
+        public void UpdateFragment() {
+            //_root.Clear();
+         _root.ToggleDisplayStyle(visible: true); 
+        
+        }    
         public void OnDestroy() { }
 
         public void ShowFragment(GameObject entity)
         {
+            //_home.Root.ToggleDisplayStyle(false);
+            //_workplace.Root.ToggleDisplayStyle(false);
+            using (StreamReader r = new StreamReader("E:\\Games\\steamapps\\common\\Timberborn\\BepInEx\\plugins\\MoreThoughts\\lang\\enUS_thoughts.json"))
+            {
+                string json = r.ReadToEnd();
+                List<beaverThoughts> beaverThoughts = JsonConvert.DeserializeObject<List<beaverThoughts>>(json);
+                var random = new System.Random();
+                int index = random.Next(beaverThoughts.Count);
+                Plugin.Log.LogInfo("show fragment: " + beaverThoughts[index].Thought.ToString());
+
+
+            }
+
             _root.ToggleDisplayStyle(visible: true);
         }
 

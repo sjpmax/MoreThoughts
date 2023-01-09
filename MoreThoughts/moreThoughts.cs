@@ -61,14 +61,14 @@ namespace MoreThoughts
         {
 
             //    using (StreamReader r = new StreamReader(_loc.T(BeaverThoughtPoolLocKey)+".json"))
-            using (StreamReader r = new StreamReader("E:\\Games\\steamapps\\common\\Timberborn\\BepInEx\\plugins\\MoreThoughts\\lang\\enUS_thoughts.json"))
-            {
-                string json = r.ReadToEnd();
-                List<beaverThoughts> beaverThoughts = JsonConvert.DeserializeObject<List<beaverThoughts>>(json);
-                var random = new System.Random();
-                int index = random.Next(beaverThoughts.Count);
-                Plugin.Log.LogInfo("I say: " + beaverThoughts[index].Thought.ToString());
-            }
+            //using (StreamReader r = new StreamReader("E:\\Games\\steamapps\\common\\Timberborn\\BepInEx\\plugins\\MoreThoughts\\lang\\enUS_thoughts.json"))
+            //{
+            //    string json = r.ReadToEnd();
+            //    List<beaverThoughts> beaverThoughts = JsonConvert.DeserializeObject<List<beaverThoughts>>(json);
+            //    var random = new System.Random();
+            //    int index = random.Next(beaverThoughts.Count);
+            //    Plugin.Log.LogInfo("I say: " + beaverThoughts[index].Thought.ToString());
+            //}
 
 
 
